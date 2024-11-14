@@ -1,18 +1,16 @@
-import { Dispatch } from "react";
-import { Action, ActionTypes, Answer, Question } from "./App";
+import useQuiz from "../hooks/useQuiz";
 
-interface QuestionOptionProps {
-  question: Question;
-  dispatch: Dispatch<ActionTypes>;
-  answer: Answer;
-}
-export default function QuestionOption({
-  question,
-  dispatch,
-  answer,
-}: QuestionOptionProps) {
+export default function QuestionOption() {
+  const {
+    state: { questions, answer, index },
+    newAnswer,
+  } = useQuiz();
+
   const hasAnswered = answer !== null;
-  const { options, correctOption } = question;
+  const { options, correctOption } = questions[index];
+  function handleClick() {
+    newAnswer();
+  }
   return (
     <>
       {" "}
@@ -23,13 +21,7 @@ export default function QuestionOption({
             className={`btn btn-option  ${index === answer ? "answer" : ""} ${
               hasAnswered ? (index === correctOption ? "correct" : "wrong") : ""
             }`}
-            onClick={() => {
-              console.log(answer);
-              dispatch({
-                type: Action.NewAnswer,
-                payload: index,
-              });
-            }}
+            onClick={handleClick}
           >
             {option}{" "}
           </button>

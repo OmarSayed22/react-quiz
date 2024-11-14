@@ -1,12 +1,19 @@
-import useQuiz from "../hooks/useQuiz";
+import { Dispatch } from "react";
+import { Action, ActionTypes } from "./App";
 
-export default function Finish() {
-  const {
-    state: { points, highScore },
-    maxPoints,
-    restart,
-  } = useQuiz();
+interface FinishProps {
+  points: number;
+  maxPoints: number;
+  dispatch: Dispatch<ActionTypes>;
+  highScore: number;
+}
 
+export default function Finish({
+  points,
+  maxPoints,
+  dispatch,
+  highScore,
+}: FinishProps) {
   const score = Math.round((points / maxPoints) * 100);
   let emoji;
   if (score >= 100) {
@@ -19,10 +26,6 @@ export default function Finish() {
     emoji = "😞"; // Sad face for low score
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-    restart();
-  };
   return (
     <div className="finish">
       <div className="result">
@@ -36,7 +39,12 @@ export default function Finish() {
         {" "}
         (High Score : {points > highScore ? points : highScore} points)
       </p>
-      <button className="btn btn-ui" onClick={handleClick}>
+      <button
+        className="btn btn-ui"
+        onClick={() => {
+          dispatch({ type: Action.Restart });
+        }}
+      >
         Restart Quiz
       </button>
     </div>

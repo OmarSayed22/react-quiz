@@ -1,22 +1,22 @@
-import { useEffect } from "react";
-import useQuiz from "../hooks/useQuiz";
+import { Dispatch, useEffect } from "react";
+import { Action, ActionTypes } from "./App";
 
-export default function Timer() {
-  const {
-    state: { secondsRemaining },
-    tick,
-  } = useQuiz();
+interface TimerProps {
+  dispatch: Dispatch<ActionTypes>;
+  secondsRemaining: number;
+}
 
+export default function Timer({ dispatch, secondsRemaining }: TimerProps) {
   useEffect(
     function () {
       const id = setInterval(function () {
-        tick();
+        dispatch({ type: Action.Tick });
       }, 1000);
       return () => {
         clearInterval(id);
       };
     },
-    [tick]
+    [dispatch]
   );
 
   const mins = Math.ceil(secondsRemaining / 60);
